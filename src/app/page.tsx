@@ -1,4 +1,5 @@
 import useGetAssets from "./hooks/getAssets";
+import HooksError from "./utils/hooks-error";
 
 declare var process: any;
 
@@ -9,6 +10,16 @@ export default async function Home() {
     console.log(crypto)
 
     return (
-        <div></div>
+        <>
+            {
+                crypto instanceof HooksError ?
+                <div className="w-screen h-screen flex items-center justify-center">
+                    {crypto.message}
+                </div> :
+                <div>
+                    Lista
+                </div>
+            }
+        </>
     )
 }
