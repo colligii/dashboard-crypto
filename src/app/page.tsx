@@ -8,8 +8,6 @@ export default async function Home() {
 
     const crypto = await useGetAssets()
 
-    console.log(crypto)
-
     return (
         <>
             {
@@ -19,7 +17,7 @@ export default async function Home() {
                     <p className="font-bold text-lg">{crypto.message}</p>
                 </div> :
                 <div>
-                    Lista
+                    {crypto.map(item => item.symbol)}
                 </div>
             }
         </>
