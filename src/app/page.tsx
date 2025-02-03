@@ -14,13 +14,14 @@ export default async function Home() {
         <>
             {
                 crypto instanceof HooksError ?
-                <div className="w-screen h-screen flex flex-col items-center justify-center">
+                <div className="w-full h-screen flex flex-col items-center justify-center">
                     <img src={BearImage.src} width={200} height={200}/>
                     <p className="font-bold text-lg">{crypto.message}</p>
                 </div> :
                 <div>
-                    <AssetsList/>
-                    {crypto.map(item => item.symbol)}
+                    <AssetsList
+                        assets={crypto}
+                    />
                 </div>
             }
         </>
