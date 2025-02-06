@@ -1,10 +1,14 @@
 import useGetAssetsById from "@/app/hooks/getAssetById"
 import HooksError from "@/app/utils/hooks-error";
+import useSWR from "swr";
+
+const fetcher = (...args: any) => fetch(...args).then(res => res.json())
 
 export default async function CryptoPage({ params }: any) {
 
     const { id } = await params;
     const cryptoInfo = await useGetAssetsById(id)
+    const { data, error } = useSWR(`/api/crypto/${id}`, )
 
     if (cryptoInfo instanceof HooksError)
         return
