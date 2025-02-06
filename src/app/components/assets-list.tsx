@@ -20,8 +20,7 @@ export default function AssetsList({ assets }: AssetsListProps) {
             }
         };
 
-        updateSize(); // Chama na montagem para pegar os valores iniciais
-
+        updateSize(); 
         window.addEventListener("resize", updateSize);
         return () => window.removeEventListener("resize", updateSize);
     }, []);
