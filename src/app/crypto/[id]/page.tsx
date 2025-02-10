@@ -19,16 +19,22 @@ export default function CryptoPage({ params }: any) {
     const _params: any = use(params);
     const { data, error } = useSWR(`/api/crypto/${_params.id}`, fetcher, {
         refreshInterval: 6000,
-        shouldRetryOnError: false,
     })
+    const { data: cryptoHistory, error: cryptoErrorHistory } = useSWR(`/api/chart/${_params.id}`, fetcher, {
+        refreshInterval: 12000
+    })
+
+    function getError() {
+        return error ?? cryptoErrorHistory
+    }
 
     return <>
         <div className="pt-16">
             {/* Mensagem de erro */}
             {
-                error &&
-                <span>
-                    {error?.message ?? "Erro inesperado na API! tente novamente mais tarde"}
+                getError() &&
+                <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-center text-white bg-red-700 rounded-md p-3">
+                    {getError()?.message ?? "Unespected error on API, don't close the page."}
                 </span>
             }
             {/* Conteudo */}
