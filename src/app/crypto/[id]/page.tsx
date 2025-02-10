@@ -1,7 +1,11 @@
 "use client"
 
-import { use } from "react";
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
+import { use, useEffect, useState } from "react";
+import { Line } from "react-chartjs-2";
 import useSWR from "swr";
+
 
 const fetcher = async (url: string) => {
     const res = await fetch(url);
@@ -17,16 +21,33 @@ const fetcher = async (url: string) => {
 export default function CryptoPage({ params }: any) {
 
     const _params: any = use(params);
+    const [chartJsConfig, setChartJsConfig] = useState<any>(null);
     const { data, error } = useSWR(`/api/crypto/${_params.id}`, fetcher, {
         refreshInterval: 6000,
     })
     const { data: cryptoHistory, error: cryptoErrorHistory } = useSWR(`/api/chart/${_params.id}`, fetcher, {
-        refreshInterval: 12000
+        refreshInterval: 60000
     })
 
     function getError() {
         return error ?? cryptoErrorHistory
     }
+
+    useEffect(() => {
+        if (!Array.isArray(cryptoHistory))
+            return;
+
+        setChartJsConfig({
+            labels: cryptoHistory.map(history => history.date),
+            datasets: [{
+                label: `${_params.id} price`,
+                data: cryptoHistory.map(history => +history.priceUsd),
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        });
+    }, [cryptoHistory])
 
     return <>
         <div className="pt-16">
@@ -41,24 +62,30 @@ export default function CryptoPage({ params }: any) {
             {
                 data &&
                 <main className="p-2">
-                    <div className="flex flex-wrap gap-4">
-                        <div className="flex flex-col">
-                            <span className="font-bold">Name:</span>
-                            <span>{data.name}</span>
+                    <section className="p-2">
+                        <div className="flex flex-wrap gap-4">
+                            <div className="flex flex-col">
+                                <span className="font-bold">Name:</span>
+                                <span>{data.name}</span>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="font-bold">Price:</span>
+                                <span>{Number(data.priceUsd).toLocaleString("en-US", { style: "currency", currency: "USD" })}</span>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="font-bold">Market Cap:</span>
+                                <span>{Number(data.marketCapUsd).toLocaleString("en-US", { style: "currency", currency: "USD" })}</span>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="font-bold">Last 24h change:</span>
+                                <span>{(Number(data.changePercent24Hr) / 100).toLocaleString("en-US", { style: "percent", minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                            </div>
                         </div>
-                        <div className="flex flex-col">
-                            <span className="font-bold">Price:</span>
-                            <span>{Number(data.priceUsd).toLocaleString("en-US", { style: "currency", currency: "USD" })}</span>
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="font-bold">Market Cap:</span>
-                            <span>{Number(data.marketCapUsd).toLocaleString("en-US", { style: "currency", currency: "USD" })}</span>
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="font-bold">Last 24h change:</span>
-                            <span>{(Number(data.changePercent24Hr) / 100).toLocaleString("en-US", { style: "percent", minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                        </div>
+                    </section>
+                    <div className="h-screen w-11/12 flex items-center justify-center">
+                        {chartJsConfig && <Line data={chartJsConfig} options={{ maintainAspectRatio: false }} />}
                     </div>
+
                 </main>
             }
         </div>
