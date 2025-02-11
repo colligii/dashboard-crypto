@@ -54,7 +54,7 @@ export default function CryptoPage({ params }: any) {
             {/* Mensagem de erro */}
             {
                 getError() &&
-                <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-center text-white bg-red-700 rounded-md p-3">
+                <span className="fixed bottom-2 left-1/2 -translate-x-1/2 text-center text-white bg-red-700 rounded-md p-3">
                     {getError()?.message ?? "Unespected error on API, don't close the page."}
                 </span>
             }
