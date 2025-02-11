@@ -28,7 +28,7 @@ export default function AssetsList({ assets }: AssetsListProps) {
     const AssetItem = ({ index, style }: any) => {
         const asset = assets[index];
         return <Link href={`/crypto/${asset.id}`}>
-            <div className="cursor-pointer flex items-center flex-col border-b-2 border-gray-300 justify-center p-2 pl-4 flex-wrap" style={style}>
+            <div className="cursor-pointer flex items-center flex-col bg-white border-b-2 border-gray-300 justify-center p-2 pl-4 flex-wrap" style={style}>
                 <p><span className="font-bold">Name:</span>{asset.name}</p>
                 <p><span className="font-bold">Price:</span>{(+asset.priceUsd).toLocaleString("en-US", { style: "currency", currency: "USD" })}</p>
                 <p><span className="font-bold">Volume 24Hrs:</span>{(+asset.volumeUsd24Hr).toLocaleString("en-US", { style: "currency", currency: "USD" })}</p>

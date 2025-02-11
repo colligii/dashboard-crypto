@@ -1,4 +1,16 @@
-This project is an basic crypto portfolio, that have two pages:
+# 📊 Crypto Portfolio  
+
+A simple and intuitive cryptocurrency portfolio built with. It allows users to view a list of cryptocurrencies and detailed information on each asset.  
+
+## 🚀 Features  
+
+- 📈 Live cryptocurrency price tracking  
+- 🔍 Detailed asset pages with charts and key information  
+- ⚡ Fetching real-time data from the **CoinCap API**  
+
+## 🛠️ Technologies  
+
+- **Frontend:** React, Next.js, TailwindCSS  
 
 - Home
 - Crypto detail

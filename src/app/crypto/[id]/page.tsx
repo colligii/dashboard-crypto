@@ -1,5 +1,6 @@
 "use client"
 
+import Loading from '@/app/components/loading';
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 import { use, useEffect, useState } from "react";
@@ -22,10 +23,10 @@ export default function CryptoPage({ params }: any) {
 
     const _params: any = use(params);
     const [chartJsConfig, setChartJsConfig] = useState<any>(null);
-    const { data, error } = useSWR(`/api/crypto/${_params.id}`, fetcher, {
+    const { data, error, isLoading } = useSWR(`/api/crypto/${_params.id}`, fetcher, {
         refreshInterval: 6000,
     })
-    const { data: cryptoHistory, error: cryptoErrorHistory } = useSWR(`/api/chart/${_params.id}`, fetcher, {
+    const { data: cryptoHistory, error: cryptoErrorHistory, isLoading: cryptoHistoryLoading } = useSWR(`/api/chart/${_params.id}`, fetcher, {
         refreshInterval: 60000
     })
 
@@ -48,6 +49,9 @@ export default function CryptoPage({ params }: any) {
             }]
         });
     }, [cryptoHistory])
+
+    if(cryptoHistoryLoading || isLoading)
+        return <Loading/>
 
     return <>
         <div className="pt-16">
@@ -82,6 +86,8 @@ export default function CryptoPage({ params }: any) {
                             </div>
                         </div>
                     </section>
+
+                    {isLoading ? "teste" : "false"}
                     <div className="h-screen w-11/12 flex items-center justify-center">
                         {chartJsConfig && <Line data={chartJsConfig} options={{ maintainAspectRatio: false }} />}
                     </div>
